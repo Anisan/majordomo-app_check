@@ -1,7 +1,9 @@
 
 <!-- table zwave_devices search -->
 <div>
+[#if "<#ACTION#>"=="admin"#]
  [ <a href="#" onClick="$('#api_settings').toggle();return false;"><#LANG_SETUP#></a> ]
+ [#endif ACTION#]
  <a href="?mode=update_checks" class="btn btn-primary" title="Refresh">Refresh</a>
 </div>
 <div style="display:none" id='api_settings'>
