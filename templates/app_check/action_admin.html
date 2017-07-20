@@ -1,0 +1,85 @@
+
+<!-- table zwave_devices search -->
+<div>
+ [ <a href="#" onClick="$('#api_settings').toggle();return false;"><#LANG_SETUP#></a> ]
+ <a href="?mode=update_checks" class="btn btn-primary" title="Refresh">Refresh</a>
+</div>
+<div style="display:none" id='api_settings'>
+&nbsp;
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+<div class="form-group">
+ <label class="control-label"[#if ERR_API_USERNAME#] style="color:red;font-weight:bold"[#endif#]>
+ API Username:
+ </label>
+ <div class="controls"><input type="text" name="api_username" value="[#API_USERNAME#]" class="input"></div>
+</div>
+<div class="form-group">
+ <label class="control-label"[#if ERR_API_PASSWORD#] style="color:red;font-weight:bold"[#endif#]>
+ API Password:
+ </label>
+ <div class="controls"><input type="password" name="api_password" value="[#API_PASSWORD#]" class="input"></div>
+</div>
+<div class="form-actions">
+<button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_UPDATE#></button>
+<input type="hidden" name="view_mode" value="update_settings">
+<input type="hidden" name="mode" value="update">
+</div>
+</fieldset>
+</form>
+</div>
+ <!-- action usual -->
+ [#if DATA_SOURCE="ch_checks" || DATA_SOURCE=""#]
+ <!-- table ch_checks search -->
+ [#if VIEW_MODE="search_ch_checks" || VIEW_MODE=""#]
+  [#inc ch_checks_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_checks search -->
+ <!-- table ch_checks edit -->
+ [#if VIEW_MODE="edit_ch_checks"#]
+   [#if ID!=""#]
+   [#if TITLE!=""#]<h4>[#TITLE#]</h4>[#endif TITLE#]
+<ul class="nav nav-tabs">
+  <li[#if TAB=""#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_GENERAL#></a>
+  </li>
+  <li[#if TAB="data"#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data">&#060#LANG_DATA#&#062</a>
+  </li>
+</ul>
+&nbsp;<br/>
+   [#endif ID#]
+   [#if TAB=""#]
+    [#inc ch_checks_edit_default.html#]
+   [#endif TAB#]
+   [#if TAB="data"#]
+    [#inc ch_checks_edit_data.html#]
+   [#endif TAB#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_checks edit -->
+ <!-- table ch_checks view --> 
+ [#if VIEW_MODE="view_ch_checks"#]
+   [#if TAB=""#]
+    [#inc ch_checks_view_default.html#]
+   [#endif TAB#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_checks view -->
+ [#endif DATA_SOURCE#]
+ <!-- action usual -->
+ [#if DATA_SOURCE="ch_items"#]
+ <!-- table ch_items search -->
+ [#if VIEW_MODE="search_ch_items" || VIEW_MODE=""#]
+  [#inc ch_items_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_items search -->
+ <!-- table ch_items edit -->
+ [#if VIEW_MODE="edit_ch_items"#]
+   [#inc ch_items_edit.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_items edit -->
+ <!-- table ch_items view --> 
+ [#if VIEW_MODE="view_ch_items"#]
+   [#inc ch_items_view.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table ch_items view -->
+ [#endif DATA_SOURCE#]
