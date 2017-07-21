@@ -6,7 +6,7 @@
   if ($this->owner->name=='panel') {
    $out['CONTROLPANEL']=1;
   }
-  $qry="1";
+  $qry="";
   // search filters
   // QUERY READY
   global $save_qry;
@@ -15,14 +15,14 @@
   } else {
    $session->data['ch_checks_qry']=$qry;
   }
-  if (!$qry) $qry="1";
+  if (!$qry) $qry="";
   $sortby_ch_checks="ID DESC";
   $out['SORTBY']=$sortby_ch_checks;
   // SEARCH RESULTS
-  $res=SQLSelect("SELECT * FROM ch_checks WHERE $qry ORDER BY ".$sortby_ch_checks);
-  if ($res[0]['ID']) {
+  $res=SQLSelect("SELECT * FROM ch_checks");
+  $total=count($res);
+  if ($total>0) {
    //paging($res, 100, $out); // search result paging
-   $total=count($res);
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
     $res[$i]["totalSum"] = $res[$i]["totalSum"] / 100;

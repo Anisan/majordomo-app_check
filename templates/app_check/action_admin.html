@@ -6,6 +6,7 @@
  [#endif ACTION#]
  <a href="?mode=update_checks" class="btn btn-primary" title="Refresh">Refresh</a>
 </div>
+[#if "<#ACTION#>"=="admin"#]
 <div style="display:none" id='api_settings'>
 &nbsp;
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
@@ -30,6 +31,7 @@
 </fieldset>
 </form>
 </div>
+[#endif ACTION#]
  <!-- action usual -->
  [#if DATA_SOURCE="ch_checks" || DATA_SOURCE=""#]
  <!-- table ch_checks search -->

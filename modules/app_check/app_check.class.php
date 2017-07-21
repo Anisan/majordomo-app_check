@@ -171,7 +171,7 @@ function updateChecks() {
     $data = json_decode($res,true);
     foreach($data as $doc) {
         $check = $doc["document"]["receipt"];
-        echo $check["user"];
+        //echo $check["user"];
         $find = SQLSelectOne("SELECT * FROM ch_checks WHERE fiscalSign='" . $check['fiscalSign'] . "';");
         if (!$find)
         {
