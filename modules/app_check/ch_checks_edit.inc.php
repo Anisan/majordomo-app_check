@@ -25,11 +25,11 @@
   }
   //UPDATING RECORD
    if ($ok) {
-    if ($rec['ID']) {
+    if ($rec['id']) {
      SQLUpdate($table_name, $rec); // update
     } else {
      $new_rec=1;
-     $rec['ID']=SQLInsert($table_name, $rec); // adding new record
+     $rec['id']=SQLInsert($table_name, $rec); // adding new record
     }
     $out['OK']=1;
    } else {
@@ -49,20 +49,11 @@
    if ($delete_id) {
     SQLExec("DELETE FROM ch_items WHERE ID='".(int)$delete_id."'");
    }
-   $properties=SQLSelect("SELECT * FROM ch_items WHERE id_check='".$rec['ID']."' ORDER BY ID");
+   $properties=SQLSelect("SELECT * FROM ch_items WHERE id_check='".$rec['id']."' ORDER BY ID");
    $total=count($properties);
    for($i=0;$i<$total;$i++) {
     $properties[$i]["sum"] = $properties[$i]["sum"] / 100;
     $properties[$i]["price"] = $properties[$i]["price"] / 100;
-  
-  if ($properties[$i]['ID']==$new_id) continue;
-    if ($this->mode=='update') {
-      global ${'title'.$properties[$i]['ID']};
-      $properties[$i]['TITLE']=trim(${'title'.$properties[$i]['ID']});
-      global ${'value'.$properties[$i]['ID']};
-      $properties[$i]['VALUE']=trim(${'value'.$properties[$i]['ID']});
-      SQLUpdate('ch_items', $properties[$i]);
-     }
    }
    $out['PROPERTIES']=$properties;   
   }

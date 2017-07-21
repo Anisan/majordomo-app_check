@@ -41,18 +41,18 @@
  <!-- / table ch_checks search -->
  <!-- table ch_checks edit -->
  [#if VIEW_MODE="edit_ch_checks"#]
-   [#if ID!=""#]
+   [#if id!=""#]
    [#if TITLE!=""#]<h4>[#TITLE#]</h4>[#endif TITLE#]
 <ul class="nav nav-tabs">
   <li[#if TAB=""#] class="active"[#endif#]>
-   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_GENERAL#></a>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#id#>&tab="><#LANG_GENERAL#></a>
   </li>
   <li[#if TAB="data"#] class="active"[#endif#]>
-   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data">&#060#LANG_DATA#&#062</a>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#id#>&tab=data">&#060#LANG_DATA#&#062</a>
   </li>
 </ul>
 &nbsp;<br/>
-   [#endif ID#]
+   [#endif id#]
    [#if TAB=""#]
     [#inc ch_checks_edit_default.html#]
    [#endif TAB#]
