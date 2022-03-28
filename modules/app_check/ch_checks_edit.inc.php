@@ -7,7 +7,6 @@
   }
   $table_name='ch_checks';
   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
-  $rec["totalSum"] = $rec["totalSum"] / 100;
   if ($this->mode=='update') {
    $ok=1;
   // step: default
@@ -52,8 +51,6 @@
    $properties=SQLSelect("SELECT * FROM ch_items WHERE id_check='".$rec['id']."' ORDER BY ID");
    $total=count($properties);
    for($i=0;$i<$total;$i++) {
-    $properties[$i]["sum"] = $properties[$i]["sum"] / 100;
-    $properties[$i]["price"] = $properties[$i]["price"] / 100;
    }
    $out['PROPERTIES']=$properties;   
   }

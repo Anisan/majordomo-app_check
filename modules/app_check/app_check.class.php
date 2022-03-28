@@ -164,26 +164,45 @@ function admin(&$out) {
 }
 
 function updateChecks() {
-    $url = "http://proverkacheka.nalog.ru:8888";
-    $res = getURL($url."/v1/extract?sendToEmail=0&fileType=json",0,$this->config['API_USERNAME'],$this->config['API_PASSWORD']);
+    $url="https://lkdr.nalog.ru/api/v1/receipt";
+    $content = [];
+    $content['dateFrom'] = null;
+    $content['dateTo'] = null;
+    $content['inn'] = null;
+    $content['kktOwner'] = null;
+    $content['limit'] = 10;
+    $content['offset'] = 0;
+    $content['orderBy'] = "RECEIVE_DATE:DESC";
+
+    $res = $this->getData($url, $content);
+
     $data = json_decode($res,true);
-    $res = getURL($url.$data['url'],0,$this->config['API_USERNAME'],$this->config['API_PASSWORD']);
-    $data = json_decode($res,true);
-    foreach($data as $doc) {
-        $check = $doc["document"]["receipt"];
-        echo $check["user"];
-        $find = SQLSelectOne("SELECT * FROM ch_checks WHERE fiscalSign='" . $check['fiscalSign'] . "';");
+    //registerError('check_app', $res);
+    //$res = getURL($url.$data['url'],0,$this->config['API_USERNAME'],$this->config['API_PASSWORD']);
+    //$data = json_decode($res,true);
+    foreach($data["receipts"] as $check) {
+        //$check = $doc["document"]["receipt"];
+        //echo $check["buyer"];
+        $find = SQLSelectOne("SELECT * FROM ch_checks WHERE fiscalSign='" . $check['key'] . "';");
         if (!$find)
         {
+            $url = "https://lkdr.nalog.ru/api/v1/receipt/fiscal_data";
+            $content = [];
+            $content["key"] = $check["key"];
+            $fiscal = $this->getData($url, $content);
+            $fiscal = json_decode($fiscal,true);
+    
             $rec = array();
-            $rec['dateTime'] = $check['dateTime'];
-            $rec['fiscalSign'] = $check["fiscalSign"];
-            $rec['user'] = $check["user"];
-            $rec['operator'] = $check["operator"];
-            $rec['retailPlaceAddress'] = $check["retailPlaceAddress"];
+            $rec['dateTime'] = $check['createdDate'];
+            $rec['fiscalSign'] = $check["key"];
+            $rec['user'] = $fiscal["retailPlace"];
+            $rec['operator'] = $fiscal["operator"];
+            $rec['retailPlaceAddress'] = $fiscal["retailPlaceAddress"];
             $rec['totalSum'] = $check["totalSum"];
             $rec['id'] = SQLInsert("ch_checks", $rec);
-            $items = $check["items"];
+            
+            
+            $items = $fiscal["items"];
             foreach($items as $item) {
                 $item_rec = array();
                 $item_rec['id_check'] = $rec['id'];
@@ -199,6 +218,31 @@ function updateChecks() {
     }
         
 
+}
+
+function getData($url, $content)
+{
+    $token = $this->config['API_USERNAME'];
+    $ch = curl_init($url);
+    // Returns the data/output as a string instead of raw data
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //Set your auth headers
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+       'Content-Type: application/json',
+       'Authorization: Bearer ' . $token,
+       'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.109 Safari/537.36'
+       ));
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($content));
+    // get stringified data/output. See CURLOPT_RETURNTRANSFER
+    $res = curl_exec($ch);
+    DebMes($res,'check_app');
+    
+    // get info about the request
+    $info = curl_getinfo($ch);
+    // close curl resource to free up system resources
+    curl_close($ch);
+    return $res;
 }
 
 /**
@@ -295,14 +339,14 @@ ch_items -
  ch_checks: user varchar(255) DEFAULT ''
  ch_checks: operator varchar(255) NOT NULL DEFAULT ''
  ch_checks: retailPlaceAddress varchar(255) NOT NULL DEFAULT ''
- ch_checks: totalSum int(10) DEFAULT '0'
+ ch_checks: totalSum float DEFAULT '0'
  
  ch_items: id int(10) unsigned NOT NULL auto_increment
  ch_items: id_check int(10) NOT NULL DEFAULT '0'
  ch_items: name varchar(255) NOT NULL DEFAULT ''
- ch_items: price int(10) DEFAULT '0'
- ch_items: quantity int(3) DEFAULT '0'
- ch_items: sum int(10) DEFAULT '0'
+ ch_items: price float DEFAULT '0'
+ ch_items: quantity float DEFAULT '0'
+ ch_items: sum float DEFAULT '0'
  
 EOD;
   parent::dbInstall($data);
